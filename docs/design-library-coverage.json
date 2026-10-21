@@ -1,0 +1,1051 @@
+{
+  "sourceInventoryStated": {
+    "pieces": 98,
+    "looks": 292
+  },
+  "ingestedInventory": {
+    "pieces": 98,
+    "looks": 292
+  },
+  "verifiedMatch": true,
+  "breakdownByCategory": {
+    "frame": {
+      "piecesCount": 12,
+      "looksCount": 37,
+      "pieces": [
+        {
+          "id": "p-frame-announcement-bar",
+          "title": "Announcement Bar",
+          "looksCount": 3,
+          "looks": [
+            "plain",
+            "dismissible",
+            "marquee"
+          ]
+        },
+        {
+          "id": "p-frame-header",
+          "title": "Header / Navigation",
+          "looksCount": 5,
+          "looks": [
+            "classic",
+            "centered-logo",
+            "transparent",
+            "sticky-compact",
+            "split"
+          ]
+        },
+        {
+          "id": "p-frame-mobile-menu",
+          "title": "Mobile Menu (Sandwich)",
+          "looksCount": 3,
+          "looks": [
+            "slide-in",
+            "full-screen",
+            "bottom-sheet"
+          ]
+        },
+        {
+          "id": "p-frame-floating-action",
+          "title": "Floating Action Button",
+          "looksCount": 3,
+          "looks": [
+            "corner-bubble",
+            "bottom-bar",
+            "side-tab"
+          ]
+        },
+        {
+          "id": "p-frame-footer",
+          "title": "Footer",
+          "looksCount": 4,
+          "looks": [
+            "minimal",
+            "columns",
+            "big-cta",
+            "with-map"
+          ]
+        },
+        {
+          "id": "p-frame-logo",
+          "title": "Logo / Brand Mark",
+          "looksCount": 3,
+          "looks": [
+            "wordmark",
+            "symbol",
+            "centered-large"
+          ]
+        },
+        {
+          "id": "p-frame-consent-banner",
+          "title": "Cookie / Consent Banner",
+          "looksCount": 4,
+          "looks": [
+            "bar",
+            "corner-card",
+            "small-button",
+            "modal"
+          ]
+        },
+        {
+          "id": "p-frame-popup-modal",
+          "title": "Pop-up / Modal",
+          "looksCount": 3,
+          "looks": [
+            "email-offer",
+            "promo",
+            "age-gate"
+          ]
+        },
+        {
+          "id": "p-frame-locale-prompt",
+          "title": "Country / Language Prompt",
+          "looksCount": 2,
+          "looks": [
+            "strip",
+            "dropdown"
+          ]
+        },
+        {
+          "id": "p-frame-search-bar",
+          "title": "Search Bar",
+          "looksCount": 3,
+          "looks": [
+            "full-width",
+            "centered",
+            "with-suggestions"
+          ]
+        },
+        {
+          "id": "p-frame-utility-bar",
+          "title": "Utility Bar",
+          "looksCount": 2,
+          "looks": [
+            "plain",
+            "with-social"
+          ]
+        },
+        {
+          "id": "p-frame-breadcrumbs",
+          "title": "Breadcrumbs",
+          "looksCount": 2,
+          "looks": [
+            "trail",
+            "compact"
+          ]
+        }
+      ]
+    },
+    "opener": {
+      "piecesCount": 2,
+      "looksCount": 13,
+      "pieces": [
+        {
+          "id": "p-opener-hero",
+          "title": "Hero",
+          "looksCount": 10,
+          "looks": [
+            "split",
+            "centered",
+            "fullscreen-image",
+            "dark-overlay",
+            "with-search",
+            "with-form",
+            "with-booking",
+            "carousel",
+            "video",
+            "banner"
+          ]
+        },
+        {
+          "id": "p-opener-page-header",
+          "title": "Page Header",
+          "looksCount": 3,
+          "looks": [
+            "plain",
+            "with-image",
+            "split"
+          ]
+        }
+      ]
+    },
+    "offer": {
+      "piecesCount": 14,
+      "looksCount": 51,
+      "pieces": [
+        {
+          "id": "p-offer-services-grid",
+          "title": "Services Grid",
+          "looksCount": 6,
+          "looks": [
+            "2-col",
+            "3-col",
+            "4-col",
+            "icon-cards",
+            "image-cards",
+            "list"
+          ]
+        },
+        {
+          "id": "p-offer-feature-rows",
+          "title": "Feature Rows",
+          "looksCount": 3,
+          "looks": [
+            "text-left-image-right",
+            "text-right-image-left",
+            "stacked"
+          ]
+        },
+        {
+          "id": "p-offer-icon-features",
+          "title": "Icon Features",
+          "looksCount": 3,
+          "looks": [
+            "grid",
+            "list",
+            "inline-cols"
+          ]
+        },
+        {
+          "id": "p-offer-process-steps",
+          "title": "Process / Steps",
+          "looksCount": 4,
+          "looks": [
+            "numbered",
+            "timeline",
+            "cards",
+            "vertical-list"
+          ]
+        },
+        {
+          "id": "p-offer-comparison-table",
+          "title": "Comparison Table",
+          "looksCount": 3,
+          "looks": [
+            "table",
+            "cards",
+            "tabs"
+          ]
+        },
+        {
+          "id": "p-offer-pricing",
+          "title": "Pricing",
+          "looksCount": 4,
+          "looks": [
+            "tiers",
+            "single-price",
+            "from-price",
+            "quote-request"
+          ]
+        },
+        {
+          "id": "p-offer-menu",
+          "title": "Menu (Restaurant/Food)",
+          "looksCount": 4,
+          "looks": [
+            "tabs-by-category",
+            "single-column",
+            "photo-menu",
+            "columns"
+          ]
+        },
+        {
+          "id": "p-offer-product-grid",
+          "title": "Product Grid",
+          "looksCount": 5,
+          "looks": [
+            "2-col",
+            "3-col",
+            "4-col",
+            "list",
+            "quick-view"
+          ]
+        },
+        {
+          "id": "p-offer-category-tiles",
+          "title": "Category Tiles",
+          "looksCount": 3,
+          "looks": [
+            "mosaic",
+            "equal-grid",
+            "carousel"
+          ]
+        },
+        {
+          "id": "p-offer-bundles",
+          "title": "Bundles / Packages",
+          "looksCount": 3,
+          "looks": [
+            "cards",
+            "banner",
+            "rows"
+          ]
+        },
+        {
+          "id": "p-offer-service-areas",
+          "title": "Service Areas",
+          "looksCount": 4,
+          "looks": [
+            "list",
+            "chips",
+            "map",
+            "columns"
+          ]
+        },
+        {
+          "id": "p-offer-promo-banner",
+          "title": "Promo Banner",
+          "looksCount": 4,
+          "looks": [
+            "image-with-card",
+            "split",
+            "strip",
+            "full-bleed"
+          ]
+        },
+        {
+          "id": "p-offer-tabs-content",
+          "title": "Tabbed Content",
+          "looksCount": 3,
+          "looks": [
+            "top-tabs",
+            "side-tabs",
+            "pills"
+          ]
+        },
+        {
+          "id": "p-offer-timeline",
+          "title": "Timeline / History",
+          "looksCount": 2,
+          "looks": [
+            "vertical",
+            "horizontal"
+          ]
+        }
+      ]
+    },
+    "trust": {
+      "piecesCount": 8,
+      "looksCount": 27,
+      "pieces": [
+        {
+          "id": "p-trust-client-logos",
+          "title": "Client Logos",
+          "looksCount": 3,
+          "looks": [
+            "strip",
+            "grid",
+            "marquee"
+          ]
+        },
+        {
+          "id": "p-trust-testimonials",
+          "title": "Testimonials",
+          "looksCount": 5,
+          "looks": [
+            "single",
+            "carousel",
+            "wall",
+            "grid",
+            "video"
+          ]
+        },
+        {
+          "id": "p-trust-case-studies",
+          "title": "Case Study Cards",
+          "looksCount": 3,
+          "looks": [
+            "cards",
+            "feature",
+            "list"
+          ]
+        },
+        {
+          "id": "p-trust-numbers",
+          "title": "Numbers / Stats",
+          "looksCount": 4,
+          "looks": [
+            "counter-row",
+            "big-number",
+            "cards",
+            "grid"
+          ]
+        },
+        {
+          "id": "p-trust-credentials",
+          "title": "Credentials / Registrations",
+          "looksCount": 3,
+          "looks": [
+            "badge-row",
+            "list",
+            "cards"
+          ]
+        },
+        {
+          "id": "p-trust-team-grid",
+          "title": "Team Grid",
+          "looksCount": 3,
+          "looks": [
+            "grid",
+            "list",
+            "feature"
+          ]
+        },
+        {
+          "id": "p-trust-person-profile",
+          "title": "Person Profile",
+          "looksCount": 3,
+          "looks": [
+            "photo-left",
+            "stacked",
+            "card"
+          ]
+        },
+        {
+          "id": "p-trust-review-summary",
+          "title": "Review Summary",
+          "looksCount": 3,
+          "looks": [
+            "badge",
+            "card",
+            "strip"
+          ]
+        }
+      ]
+    },
+    "media": {
+      "piecesCount": 9,
+      "looksCount": 28,
+      "pieces": [
+        {
+          "id": "p-media-gallery",
+          "title": "Gallery",
+          "looksCount": 4,
+          "looks": [
+            "grid",
+            "masonry",
+            "carousel",
+            "lightbox"
+          ]
+        },
+        {
+          "id": "p-media-photo-wall",
+          "title": "Photo Wall",
+          "looksCount": 3,
+          "looks": [
+            "3-across",
+            "4-across",
+            "uneven-tiles"
+          ]
+        },
+        {
+          "id": "p-media-profile-header",
+          "title": "Profile Header",
+          "looksCount": 3,
+          "looks": [
+            "centered",
+            "left-aligned",
+            "banner-style"
+          ]
+        },
+        {
+          "id": "p-media-social-feed",
+          "title": "Social Feed",
+          "looksCount": 4,
+          "looks": [
+            "grid",
+            "list",
+            "carousel",
+            "masonry"
+          ]
+        },
+        {
+          "id": "p-media-reels-row",
+          "title": "Reels Row",
+          "looksCount": 2,
+          "looks": [
+            "row",
+            "carousel"
+          ]
+        },
+        {
+          "id": "p-media-video-block",
+          "title": "Video Block",
+          "looksCount": 3,
+          "looks": [
+            "inline",
+            "full-width",
+            "lightbox"
+          ]
+        },
+        {
+          "id": "p-media-marquee",
+          "title": "Marquee / Logo Scroller",
+          "looksCount": 3,
+          "looks": [
+            "logos",
+            "words",
+            "images"
+          ]
+        },
+        {
+          "id": "p-media-map",
+          "title": "Map",
+          "looksCount": 3,
+          "looks": [
+            "embedded-interactive",
+            "static-image",
+            "list-of-branches"
+          ]
+        },
+        {
+          "id": "p-media-image-band",
+          "title": "Image / Video Band",
+          "looksCount": 3,
+          "looks": [
+            "full-width",
+            "contained",
+            "with-caption"
+          ]
+        }
+      ]
+    },
+    "answer": {
+      "piecesCount": 2,
+      "looksCount": 7,
+      "pieces": [
+        {
+          "id": "p-answer-faq",
+          "title": "FAQ",
+          "looksCount": 4,
+          "looks": [
+            "accordion",
+            "two-column",
+            "cards",
+            "tab-list"
+          ]
+        },
+        {
+          "id": "p-answer-explainer",
+          "title": "Explainer",
+          "looksCount": 3,
+          "looks": [
+            "steps",
+            "callout",
+            "text-with-image"
+          ]
+        }
+      ]
+    },
+    "action": {
+      "piecesCount": 11,
+      "looksCount": 34,
+      "pieces": [
+        {
+          "id": "p-action-cta",
+          "title": "Call to Action",
+          "looksCount": 4,
+          "looks": [
+            "banner",
+            "card",
+            "inline",
+            "sticky"
+          ]
+        },
+        {
+          "id": "p-action-contact-form",
+          "title": "Contact Form",
+          "looksCount": 4,
+          "looks": [
+            "short",
+            "detailed",
+            "with-picker",
+            "with-side-info"
+          ]
+        },
+        {
+          "id": "p-action-appointment-request",
+          "title": "Appointment Request",
+          "looksCount": 3,
+          "looks": [
+            "form",
+            "stepper",
+            "calendar-picker"
+          ]
+        },
+        {
+          "id": "p-action-quote-request",
+          "title": "Quote Request",
+          "looksCount": 2,
+          "looks": [
+            "form",
+            "multi-step"
+          ]
+        },
+        {
+          "id": "p-action-whatsapp-card",
+          "title": "WhatsApp Card",
+          "looksCount": 3,
+          "looks": [
+            "card",
+            "button-row",
+            "inline"
+          ]
+        },
+        {
+          "id": "p-action-newsletter",
+          "title": "Newsletter Signup",
+          "looksCount": 4,
+          "looks": [
+            "inline",
+            "footer",
+            "banner",
+            "popup"
+          ]
+        },
+        {
+          "id": "p-action-location-hours",
+          "title": "Location &amp; Hours",
+          "looksCount": 3,
+          "looks": [
+            "card",
+            "split-with-map",
+            "full-width"
+          ]
+        },
+        {
+          "id": "p-action-button-row",
+          "title": "Button Row",
+          "looksCount": 3,
+          "looks": [
+            "vertical-stack",
+            "horizontal-row",
+            "grid"
+          ]
+        },
+        {
+          "id": "p-action-app-download",
+          "title": "App Download",
+          "looksCount": 3,
+          "looks": [
+            "badges",
+            "text-links",
+            "with-phone-image"
+          ]
+        },
+        {
+          "id": "p-action-store-locator",
+          "title": "Store / Branch Locator",
+          "looksCount": 3,
+          "looks": [
+            "list",
+            "city-links",
+            "map-search"
+          ]
+        },
+        {
+          "id": "p-action-social-links",
+          "title": "Social Links Strip",
+          "looksCount": 2,
+          "looks": [
+            "icons",
+            "text-links"
+          ]
+        }
+      ]
+    },
+    "content": {
+      "piecesCount": 5,
+      "looksCount": 14,
+      "pieces": [
+        {
+          "id": "p-content-blog-index",
+          "title": "Blog Index",
+          "looksCount": 3,
+          "looks": [
+            "cards",
+            "list",
+            "featured"
+          ]
+        },
+        {
+          "id": "p-content-article-template",
+          "title": "Article Template",
+          "looksCount": 2,
+          "looks": [
+            "single-column",
+            "with-sidebar"
+          ]
+        },
+        {
+          "id": "p-content-author-box",
+          "title": "Author Box",
+          "looksCount": 2,
+          "looks": [
+            "inline",
+            "card"
+          ]
+        },
+        {
+          "id": "p-content-text-block",
+          "title": "Text Block",
+          "looksCount": 4,
+          "looks": [
+            "single-column",
+            "narrow-column",
+            "two-column",
+            "letter"
+          ]
+        },
+        {
+          "id": "p-content-quote-block",
+          "title": "Pull Quote",
+          "looksCount": 3,
+          "looks": [
+            "centered-large",
+            "over-image",
+            "with-attribution"
+          ]
+        }
+      ]
+    },
+    "motion": {
+      "piecesCount": 8,
+      "looksCount": 19,
+      "pieces": [
+        {
+          "id": "p-motion-scroll-reveal",
+          "title": "Scroll Reveal",
+          "looksCount": 3,
+          "looks": [
+            "fade",
+            "slide-up",
+            "slide-in"
+          ]
+        },
+        {
+          "id": "p-motion-parallax",
+          "title": "Parallax",
+          "looksCount": 2,
+          "looks": [
+            "background-shift",
+            "depth-shift"
+          ]
+        },
+        {
+          "id": "p-motion-hover-lift",
+          "title": "Hover Lift / Tilt",
+          "looksCount": 3,
+          "looks": [
+            "lift",
+            "3d-tilt",
+            "shadow-grow"
+          ]
+        },
+        {
+          "id": "p-motion-counter",
+          "title": "Counter",
+          "looksCount": 2,
+          "looks": [
+            "integer-count",
+            "percent-count"
+          ]
+        },
+        {
+          "id": "p-motion-tilt-3d",
+          "title": "3D Tilt Cards",
+          "looksCount": 2,
+          "looks": [
+            "pointer-tilt",
+            "scroll-tilt"
+          ]
+        },
+        {
+          "id": "p-motion-sticky-story",
+          "title": "Sticky Scroll Story",
+          "looksCount": 2,
+          "looks": [
+            "image-fixed",
+            "text-fixed"
+          ]
+        },
+        {
+          "id": "p-motion-webgl-hero",
+          "title": "WebGL / 3D Hero",
+          "looksCount": 3,
+          "looks": [
+            "object-turntable",
+            "particle-field",
+            "shader-background"
+          ]
+        },
+        {
+          "id": "p-motion-lottie",
+          "title": "Lottie / Vector Animation",
+          "looksCount": 2,
+          "looks": [
+            "icon-loop",
+            "illustration"
+          ]
+        }
+      ]
+    },
+    "vertical": {
+      "piecesCount": 27,
+      "looksCount": 62,
+      "pieces": [
+        {
+          "id": "p-vertical-clinic-doctor-profile",
+          "title": "Doctor Profile",
+          "looksCount": 3,
+          "looks": [
+            "photo-card",
+            "banner",
+            "expanded"
+          ]
+        },
+        {
+          "id": "p-vertical-clinic-treatment-list",
+          "title": "Treatment List",
+          "looksCount": 3,
+          "looks": [
+            "grid",
+            "list",
+            "accordion"
+          ]
+        },
+        {
+          "id": "p-vertical-clinic-patient-journey",
+          "title": "Patient Journey",
+          "looksCount": 3,
+          "looks": [
+            "timeline",
+            "numbered-steps",
+            "visual-flow"
+          ]
+        },
+        {
+          "id": "p-vertical-clinic-appointment-request",
+          "title": "Clinic Appointment Request",
+          "looksCount": 2,
+          "looks": [
+            "form",
+            "calendar-picker"
+          ]
+        },
+        {
+          "id": "p-vertical-restaurant-menu-by-category",
+          "title": "Menu by Category",
+          "looksCount": 3,
+          "looks": [
+            "tabs",
+            "accordion",
+            "columns"
+          ]
+        },
+        {
+          "id": "p-vertical-restaurant-reservation",
+          "title": "Restaurant Reservation",
+          "looksCount": 2,
+          "looks": [
+            "form",
+            "widget-embedded"
+          ]
+        },
+        {
+          "id": "p-vertical-restaurant-chef-story",
+          "title": "Chef Story",
+          "looksCount": 2,
+          "looks": [
+            "photo-left",
+            "stacked"
+          ]
+        },
+        {
+          "id": "p-vertical-d2c-product-detail",
+          "title": "Product Detail",
+          "looksCount": 2,
+          "looks": [
+            "gallery-left",
+            "stacked"
+          ]
+        },
+        {
+          "id": "p-vertical-d2c-before-after",
+          "title": "Before / After Slider",
+          "looksCount": 2,
+          "looks": [
+            "slider",
+            "side-by-side"
+          ]
+        },
+        {
+          "id": "p-vertical-d2c-ingredients",
+          "title": "Ingredients / Materials",
+          "looksCount": 3,
+          "looks": [
+            "list",
+            "grid",
+            "table"
+          ]
+        },
+        {
+          "id": "p-vertical-d2c-size-guide",
+          "title": "Size Guide",
+          "looksCount": 2,
+          "looks": [
+            "table",
+            "visual-guide"
+          ]
+        },
+        {
+          "id": "p-vertical-services-case-study",
+          "title": "Professional Case Study",
+          "looksCount": 2,
+          "looks": [
+            "card",
+            "full-width"
+          ]
+        },
+        {
+          "id": "p-vertical-services-methodology",
+          "title": "Methodology",
+          "looksCount": 2,
+          "looks": [
+            "steps",
+            "visual-diagram"
+          ]
+        },
+        {
+          "id": "p-vertical-education-course-grid",
+          "title": "Course Grid",
+          "looksCount": 2,
+          "looks": [
+            "cards",
+            "list"
+          ]
+        },
+        {
+          "id": "p-vertical-education-curriculum",
+          "title": "Curriculum",
+          "looksCount": 3,
+          "looks": [
+            "accordion",
+            "tabs",
+            "list"
+          ]
+        },
+        {
+          "id": "p-vertical-education-faculty",
+          "title": "Faculty",
+          "looksCount": 2,
+          "looks": [
+            "grid",
+            "list"
+          ]
+        },
+        {
+          "id": "p-vertical-realestate-listing-card",
+          "title": "Real Estate Listing Card",
+          "looksCount": 2,
+          "looks": [
+            "card",
+            "list-row"
+          ]
+        },
+        {
+          "id": "p-vertical-realestate-floor-plan",
+          "title": "Floor Plan",
+          "looksCount": 2,
+          "looks": [
+            "image",
+            "interactive"
+          ]
+        },
+        {
+          "id": "p-vertical-realestate-amenities",
+          "title": "Amenities",
+          "looksCount": 2,
+          "looks": [
+            "grid",
+            "list"
+          ]
+        },
+        {
+          "id": "p-vertical-beauty-treatment-menu",
+          "title": "Treatment Menu",
+          "looksCount": 3,
+          "looks": [
+            "list",
+            "cards",
+            "table"
+          ]
+        },
+        {
+          "id": "p-vertical-beauty-booking",
+          "title": "Beauty Booking",
+          "looksCount": 2,
+          "looks": [
+            "form",
+            "calendar"
+          ]
+        },
+        {
+          "id": "p-vertical-travel-rooms-packages",
+          "title": "Rooms / Packages",
+          "looksCount": 2,
+          "looks": [
+            "grid",
+            "carousel"
+          ]
+        },
+        {
+          "id": "p-vertical-fitness-class-schedule",
+          "title": "Class Schedule",
+          "looksCount": 2,
+          "looks": [
+            "table",
+            "calendar"
+          ]
+        },
+        {
+          "id": "p-vertical-fitness-membership",
+          "title": "Membership Plans",
+          "looksCount": 2,
+          "looks": [
+            "cards",
+            "comparison"
+          ]
+        },
+        {
+          "id": "p-vertical-retail-gift-guide",
+          "title": "Gift Guide",
+          "looksCount": 2,
+          "looks": [
+            "grid",
+            "carousel"
+          ]
+        },
+        {
+          "id": "p-vertical-optical-lens-types",
+          "title": "Lens Types / Materials",
+          "looksCount": 3,
+          "looks": [
+            "cards",
+            "comparison",
+            "list"
+          ]
+        },
+        {
+          "id": "p-vertical-salon-stylist-profiles",
+          "title": "Stylist Profiles",
+          "looksCount": 2,
+          "looks": [
+            "grid",
+            "cards"
+          ]
+        }
+      ]
+    }
+  }
+}

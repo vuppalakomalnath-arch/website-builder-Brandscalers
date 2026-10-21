@@ -1,0 +1,33 @@
+{
+  "name": "website-studio",
+  "version": "2.1.0",
+  "private": true,
+  "description": "Website Studio — Structured website-generation engine with an interactive visual editor",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push",
+    "library:ingest": "node scripts/ingest-library.js",
+    "benchmark": "node scripts/benchmark-generation.js"
+  },
+  "dependencies": {
+    "@google/genai": "^2.29.1",
+    "@prisma/client": "^6.4.1",
+    "lucide-react": "^0.475.0",
+    "nanoid": "^5.1.0",
+    "next": "15.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "prisma": "^6.4.1",
+    "typescript": "^5.7.3"
+  }
+}
