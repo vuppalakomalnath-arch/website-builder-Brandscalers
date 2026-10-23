@@ -79,9 +79,11 @@ export async function executeGenerationPipeline(
     data: { currentStage: 'plan_created' },
   });
 
-  // Stage 5: Design System Created (Natural Palette tokens derived from 16 dials)
+  // Stage 5: Design System Created (Natural Palette tokens derived from 16 dials & benchmark blueprint)
+  const blueprint = profile.confirmedFacts?.referenceBlueprint;
   const presetKey =
-    profile.brandTone === 'warm-clinic'
+    blueprint?.presetKey ||
+    (profile.brandTone === 'warm-clinic'
       ? 'Warm clinic'
       : profile.brandTone === 'quiet-luxury'
       ? 'Quiet luxury'
@@ -97,15 +99,31 @@ export async function executeGenerationPipeline(
       ? 'Dark slate'
       : profile.brandTone === 'editorial-mono'
       ? 'Editorial mono'
-      : 'Warm clinic';
+      : 'Editorial mono');
 
-  const dials = PRESETS[presetKey] || PRESETS['Warm clinic'];
+  const baseDials = PRESETS[presetKey] || PRESETS['Editorial mono'];
+  const dials = { ...baseDials };
+  if (blueprint?.fontPairing) {
+    dials.font = blueprint.fontPairing;
+  }
+  if (blueprint?.keyDesignFeatures?.cornerStyle) {
+    dials.radius = blueprint.keyDesignFeatures.cornerStyle;
+  }
+  if (blueprint?.keyDesignFeatures?.buttonStyle) {
+    dials.buttons = blueprint.keyDesignFeatures.buttonStyle;
+  }
+  if (blueprint?.keyDesignFeatures?.density) {
+    dials.density = blueprint.keyDesignFeatures.density;
+  }
+
   const { vars, attrs } = designToVars(dials);
   const designSystem: DesignSystem = {
     schemaVersion: '2.1',
     designSystemId: `ds-${projectId}`,
     conceptName: presetKey,
-    conceptRationale: `Natural modern aesthetic with earthy tones, organic balance, and minimal clutter.`,
+    conceptRationale: blueprint
+      ? `Inspired by ${blueprint.name} (${blueprint.tagline}). Natural modern aesthetic with authentic balance.`
+      : `Natural modern aesthetic with earthy tones, organic balance, and minimal clutter.`,
     dials,
     computedTokens: vars,
     rootAttributes: attrs,

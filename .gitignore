@@ -40,3 +40,16 @@ dev.db
 dev.db-journal
 *.sqlite
 *.sqlite3
+
+# User uploaded media
+public/uploads/*
+!public/uploads/.gitkeep
+
+# Sensitive keys and certificates
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+

@@ -17,11 +17,23 @@ import {
   Layers,
   ShieldAlert,
   ArrowLeft,
+  ArrowRight,
   Plus,
+  Loader2,
+  Upload,
+  Image as ImageIcon,
+  Video,
+  Paperclip,
+  X,
+  Link2,
+  Play,
+  CheckCircle2,
+  AlertCircle,
 } from 'lucide-react';
-import { WebsitePreview } from '@/engine/rendering/preview-runtime';
+import { WebsitePreview, MediaTarget } from '@/engine/rendering/preview-runtime';
 import { PRESETS, designToVars, fontsHref, FONT_PAIRS } from '@/engine/design-system/tokens';
 import libraryRegistry from '@/registry/library-registry.json';
+import { MediaUploadModal } from './media-upload-modal';
 
 export interface VisualEditorClientProps {
   projectId: string;
@@ -60,6 +72,19 @@ export default function VisualEditorClient({
 
   // Autosave and History
   const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'error'>('saved');
+
+  // AI Section Copilot State
+  const [aiPrompt, setAiPrompt] = useState<string>('');
+  const [isRegenerating, setIsRegenerating] = useState<boolean>(false);
+  const [aiStatusMessage, setAiStatusMessage] = useState<{ type: 'info' | 'success' | 'error'; text: string } | null>(null);
+  
+  // Media Upload & Attachment State
+  const [activeMediaTarget, setActiveMediaTarget] = useState<MediaTarget | null>(null);
+  const [attachedMedia, setAttachedMedia] = useState<{
+    url: string;
+    mediaType: 'image' | 'video' | 'logo';
+    filename?: string;
+  } | null>(null);
   const [history, setHistory] = useState<any[]>([
     {
       manifest: initialManifest,
@@ -258,6 +283,100 @@ export default function VisualEditorClient({
     commitState(nextManifest, designSystem, contentBlocks);
   };
 
+  // Update section media (logo, hero image, hero video, product item image)
+  const handleUpdateMedia = (instanceId: string, field: string, url: string, itemIndex?: number) => {
+    if (!manifest) return;
+    const nextPages = manifest.pages.map((p: any) => ({
+      ...p,
+      componentInstances: p.componentInstances.map((ci: any) => {
+        if (ci.instanceId !== instanceId) return ci;
+        if (itemIndex !== undefined && Array.isArray(ci.props?.[field])) {
+          const nextItems = [...(ci.props[field] || [])];
+          nextItems[itemIndex] = { ...nextItems[itemIndex], imageUrl: url };
+          return { ...ci, props: { ...ci.props, [field]: nextItems } };
+        }
+        return { ...ci, props: { ...ci.props, [field]: url } };
+      }),
+    }));
+    const nextManifest = { ...manifest, pages: nextPages };
+    setManifest(nextManifest);
+    commitState(nextManifest, designSystem, contentBlocks);
+  };
+
+  // AI Section Regeneration Handler
+  const handleRegenerateSectionWithAI = async () => {
+    if (!selectedInstance || !aiPrompt.trim() || isRegenerating) return;
+    setIsRegenerating(true);
+    setAiStatusMessage({ type: 'info', text: 'Gemini AI is crafting tailored copy, items, and layout...' });
+
+    try {
+      const res = await fetch('/api/edits/regenerate-section', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectId,
+          instanceId: selectedInstance.instanceId,
+          pieceId: selectedInstance.pieceId,
+          pieceTitle: selectedPiece?.title || selectedInstance.pieceId,
+          variantName: selectedInstance.variantName,
+          availableVariants: selectedPiece?.variants?.map((v: any) => v.name) || [],
+          currentProps: selectedInstance.props || {},
+          userPrompt: aiPrompt.trim(),
+          businessProfile: manifest?.businessProfile || initialManifest?.businessProfile,
+          pageSlug: activePageSlug,
+          mediaUrl: attachedMedia?.url,
+          logoUrl: attachedMedia?.mediaType === 'logo' ? attachedMedia.url : undefined,
+          imageUrl: attachedMedia?.mediaType === 'image' ? attachedMedia.url : undefined,
+          videoUrl: attachedMedia?.mediaType === 'video' ? attachedMedia.url : undefined,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to apply changes with AI');
+      }
+
+      // Update the section props and variant directly in manifest
+      const nextPages = manifest.pages.map((p: any) => ({
+        ...p,
+        componentInstances: p.componentInstances.map((ci: any) =>
+          ci.instanceId === selectedInstance.instanceId
+            ? {
+                ...ci,
+                props: { ...ci.props, ...data.updatedProps },
+                variantName: data.variantName || ci.variantName,
+                lookVariantId: data.variantName || ci.lookVariantId,
+              }
+            : ci
+        ),
+      }));
+      const nextManifest = { ...manifest, pages: nextPages };
+      setManifest(nextManifest);
+      commitState(nextManifest, designSystem, contentBlocks);
+
+      if (data.totalCostINR) {
+        setCostTelemetry({
+          totalCostINR: data.totalCostINR,
+          withinBudget: data.totalCostINR <= 8.0,
+        });
+      }
+
+      setAiStatusMessage({
+        type: 'success',
+        text: `✨ ${data.summaryOfChanges || 'Changes generated and applied successfully!'} (+₹${(data.costINR || 0.02).toFixed(2)})`,
+      });
+      setTimeout(() => setAiStatusMessage(null), 6000);
+    } catch (err: any) {
+      console.error('Section AI regeneration failed:', err);
+      setAiStatusMessage({
+        type: 'error',
+        text: err.message || 'AI generation encountered an error.',
+      });
+    } finally {
+      setIsRegenerating(false);
+    }
+  };
+
   // Dial Change Handler
   const handleDialChange = (key: string, val: any) => {
     if (!designSystem) return;
@@ -405,6 +524,27 @@ export default function VisualEditorClient({
           <div className="cost-telemetry-chip">
             <Sparkles size={14} /> AI Cost: ₹{costTelemetry.totalCostINR.toFixed(2)} / ₹8.00
           </div>
+
+          <Link
+            href={`/publish/${projectId}`}
+            className="studio-btn primary"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 14px',
+              fontSize: '13px',
+              fontWeight: 600,
+              borderRadius: '6px',
+              background: 'var(--studio-accent)',
+              color: '#ffffff',
+              textDecoration: 'none',
+              marginLeft: '4px',
+            }}
+          >
+            <span>Final Draft &amp; Publish</span>
+            <ArrowRight size={14} />
+          </Link>
         </div>
       </header>
 
@@ -517,6 +657,7 @@ export default function VisualEditorClient({
               setSelectedInstanceId(null);
             }}
             onSectionPropChange={handleUpdateSectionProp}
+            onMediaClick={(target) => setActiveMediaTarget(target)}
             isEditable={true}
           />
         </main>
@@ -750,6 +891,229 @@ export default function VisualEditorClient({
                     <code style={{ fontSize: '11px', color: 'var(--studio-muted)' }}>{selectedInstance.pieceId}</code>
                   </div>
 
+                  {/* AI Section Copilot Card */}
+                  <div
+                    style={{
+                      padding: '14px',
+                      background: '#faf7f2',
+                      borderRadius: '8px',
+                      border: '1px solid #e5ded6',
+                      marginBottom: '16px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, fontSize: '13px', color: 'var(--studio-ink)' }}>
+                        <Sparkles size={15} color="#8a5334" />
+                        <span>AI Section Copilot</span>
+                      </div>
+                      <span
+                        style={{
+                          fontSize: '11px',
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          background: '#ebe4dc',
+                          color: '#5c4838',
+                          fontWeight: 500,
+                        }}
+                      >
+                        ≤ ₹0.05
+                      </span>
+                    </div>
+
+                    <p style={{ fontSize: '12px', color: 'var(--studio-muted)', margin: '0 0 10px', lineHeight: 1.4 }}>
+                      Describe the changes you want. AI will directly update and regenerate copy, headlines, items, and layout variants on the website:
+                    </p>
+
+                    <textarea
+                      rows={3}
+                      value={aiPrompt}
+                      onChange={(e) => setAiPrompt(e.target.value)}
+                      placeholder="e.g., Emphasize our 100% handcrafted organic ingredients, change layout to centered, and add 4 seasonal products with prices..."
+                      style={{
+                        width: '100%',
+                        padding: '8px 10px',
+                        borderRadius: '6px',
+                        border: '1px solid #d4c7b8',
+                        fontSize: '12px',
+                        lineHeight: 1.4,
+                        resize: 'vertical',
+                        background: '#fff',
+                        marginBottom: '8px',
+                        outline: 'none',
+                        fontFamily: 'inherit',
+                      }}
+                    />
+
+                    {/* Attached Media in Copilot */}
+                    {attachedMedia ? (
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '6px 10px',
+                          borderRadius: '6px',
+                          background: '#fff',
+                          border: '1px solid #b49b86',
+                          marginBottom: '8px',
+                          fontSize: '11px',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflow: 'hidden' }}>
+                          <span style={{ fontSize: '13px' }}>
+                            {attachedMedia.mediaType === 'video' ? '🎬' : attachedMedia.mediaType === 'logo' ? '👑' : '🖼️'}
+                          </span>
+                          <span style={{ fontWeight: 600, color: '#3f2d20', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                            {attachedMedia.filename || (attachedMedia.mediaType === 'logo' ? 'Brand Logo' : 'Attached Media')}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setAttachedMedia(null)}
+                          style={{
+                            border: 'none',
+                            background: 'transparent',
+                            color: '#991b1b',
+                            cursor: 'pointer',
+                            padding: '2px',
+                            display: 'flex',
+                            alignItems: 'center',
+                          }}
+                          title="Remove attachment"
+                        >
+                          <X size={13} />
+                        </button>
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActiveMediaTarget({
+                              instanceId: selectedInstance.instanceId,
+                              field: selectedInstance.pieceId === 'p-frame-header' ? 'logoUrl' : 'imageUrl',
+                              mediaType: selectedInstance.pieceId === 'p-frame-header' ? 'logo' : 'image',
+                              title: `Attach Media to ${selectedPiece?.title || 'Section'}`,
+                            });
+                          }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                            padding: '6px 10px',
+                            borderRadius: '6px',
+                            border: '1px dashed #b49b86',
+                            background: '#fff',
+                            color: '#6e492f',
+                            fontSize: '11px',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            flex: 1,
+                            justifyContent: 'center',
+                            transition: 'all 0.15s ease',
+                          }}
+                        >
+                          <Paperclip size={12} />
+                          <span>Attach Image / Video (JPG/PNG ≤ 5MB, MP4/MP3 ≤ 10MB)</span>
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Quick Suggestion Chips */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '10px' }}>
+                      {[
+                        '✨ Modernize copy & headlines',
+                        '🎯 Stronger call to action',
+                        '🌿 Natural luxury tone',
+                        '🎨 Change to centered layout',
+                        '📦 Add 4 products with prices',
+                        '⭐ Add 5-star customer reviews',
+                        '❓ Add shipping & return FAQs',
+                      ].map((chip) => (
+                        <button
+                          key={chip}
+                          type="button"
+                          onClick={() => {
+                            const clean = chip.replace(/^[^\w]+/, '');
+                            setAiPrompt((prev) => (prev ? `${prev}. ${clean}` : clean));
+                          }}
+                          style={{
+                            border: '1px solid #e0d5c8',
+                            background: '#fff',
+                            borderRadius: '12px',
+                            padding: '3px 8px',
+                            fontSize: '11px',
+                            cursor: 'pointer',
+                            color: '#5c4838',
+                          }}
+                        >
+                          {chip}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Status message */}
+                    {aiStatusMessage && (
+                      <div
+                        style={{
+                          padding: '6px 8px',
+                          borderRadius: '4px',
+                          marginBottom: '8px',
+                          fontSize: '11px',
+                          background:
+                            aiStatusMessage.type === 'error'
+                              ? '#fee2e2'
+                              : aiStatusMessage.type === 'success'
+                              ? '#dcfce7'
+                              : '#fef3c7',
+                          color:
+                            aiStatusMessage.type === 'error'
+                              ? '#991b1b'
+                              : aiStatusMessage.type === 'success'
+                              ? '#166534'
+                              : '#854d0e',
+                        }}
+                      >
+                        {aiStatusMessage.text}
+                      </div>
+                    )}
+
+                    {/* Submit Button */}
+                    <button
+                      type="button"
+                      onClick={handleRegenerateSectionWithAI}
+                      disabled={!aiPrompt.trim() || isRegenerating}
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px',
+                        padding: '9px 14px',
+                        borderRadius: '6px',
+                        background: !aiPrompt.trim() || isRegenerating ? '#dfd7cf' : '#8a5334',
+                        color: '#fff',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        border: 'none',
+                        cursor: !aiPrompt.trim() || isRegenerating ? 'not-allowed' : 'pointer',
+                        transition: 'background 0.15s ease',
+                      }}
+                    >
+                      {isRegenerating ? (
+                        <>
+                          <Loader2 size={13} className="spin" />
+                          Applying Changes with Gemini AI...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles size={13} />
+                          Generate &amp; Apply Changes to Website
+                        </>
+                      )}
+                    </button>
+                  </div>
+
                   {/* Switch Variant */}
                   <div className="prop-group">
                     <div className="prop-title">Select Look / Variant ({selectedPiece?.variants?.length} Available)</div>
@@ -979,8 +1343,47 @@ export default function VisualEditorClient({
                   </div>
                 </div>
               ) : (
-                <div style={{ textAlign: 'center', padding: '40px 10px', color: 'var(--studio-muted)', fontSize: '13px' }}>
-                  Click any section on the canvas or in the left navigator to customize its copy, look variant, and properties.
+                <div style={{ padding: '24px 16px', color: 'var(--studio-muted)', fontSize: '13px', lineHeight: 1.5 }}>
+                  <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+                    <Sparkles size={24} color="#8a5334" style={{ margin: '0 auto 8px', display: 'block', opacity: 0.8 }} />
+                    <p style={{ fontWeight: 700, color: 'var(--studio-ink)', margin: '0 0 4px', fontSize: '14px' }}>AI Section Copilot</p>
+                    <p style={{ margin: 0, fontSize: '12px', color: 'var(--studio-muted)' }}>
+                      Select any section on the canvas or pick one from this page to make changes:
+                    </p>
+                  </div>
+
+                  <div style={{ display: 'grid', gap: '6px' }}>
+                    {activePage?.componentInstances?.map((ci: any) => {
+                      const piece = (libraryRegistry as any).pieces.find((p: any) => p.id === ci.pieceId);
+                      return (
+                        <button
+                          key={ci.instanceId}
+                          onClick={() => setSelectedInstanceId(ci.instanceId)}
+                          style={{
+                            padding: '10px 12px',
+                            background: '#fff',
+                            border: '1px solid var(--studio-border)',
+                            borderRadius: '6px',
+                            textAlign: 'left',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <div>
+                            <div style={{ fontWeight: 600, color: 'var(--studio-ink)', fontSize: '13px' }}>
+                              {piece?.title || ci.pieceId}
+                            </div>
+                            <small style={{ color: 'var(--studio-muted)', fontSize: '11px' }}>
+                              Variant: {ci.variantName}
+                            </small>
+                          </div>
+                          <span style={{ fontSize: '12px', color: 'var(--studio-accent)', fontWeight: 600 }}>Edit with AI &rarr;</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </div>
@@ -1017,6 +1420,36 @@ export default function VisualEditorClient({
           )}
         </aside>
       </div>
+
+      {/* Universal Media Upload & Custom Image/Video Modal */}
+      {activeMediaTarget && (
+        <MediaUploadModal
+          target={activeMediaTarget}
+          brandName={
+            manifest?.pages?.[0]?.componentInstances?.find((ci: any) => ci.pieceId === 'p-frame-header')?.props?.brandName ||
+            manifest?.businessProfile?.brandName ||
+            'House of Jaya'
+          }
+          onClose={() => setActiveMediaTarget(null)}
+          onApply={(url) => {
+            handleUpdateMedia(
+              activeMediaTarget.instanceId,
+              activeMediaTarget.field,
+              url,
+              activeMediaTarget.itemIndex
+            );
+            setActiveMediaTarget(null);
+          }}
+          onAttachToCopilot={(url, mType, fName) => {
+            setAttachedMedia({ url, mediaType: mType, filename: fName });
+            setActiveTab('section');
+            if (activeMediaTarget.instanceId) {
+              setSelectedInstanceId(activeMediaTarget.instanceId);
+            }
+            setActiveMediaTarget(null);
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -49,7 +49,7 @@ export async function GET(
       manifest: latestVersion?.manifest || null,
       designSystem: latestVersion?.designSystem || null,
       contentBlocks: latestVersion?.contentBlocks || [],
-      qualityReport: latestQuality?.reportData || null,
+      qualityReport: latestQuality || null,
       estimatedAiCostINR: latestRun?.estimatedCostINR || 0,
     });
   } catch (error: any) {

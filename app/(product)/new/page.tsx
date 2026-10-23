@@ -19,6 +19,8 @@ export default function OnboardingPage() {
   const [step, setStep] = useState<'brief' | 'clarify' | 'plan_review' | 'generating'>('brief');
   const [inferredProfile, setInferredProfile] = useState<any>(null);
   const [adaptiveQuestions, setAdaptiveQuestions] = useState<any[]>([]);
+  const [suggestedBenchmarks, setSuggestedBenchmarks] = useState<{ recommended: any; alternatives: any[] } | null>(null);
+  const [selectedBenchmark, setSelectedBenchmark] = useState<any | null>(null);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
   const [currentStage, setCurrentStage] = useState<string>('brief_received');
   const [costTelemetry, setCostTelemetry] = useState<{ tokens: number; costINR: number }>({ tokens: 0, costINR: 0 });
@@ -43,6 +45,7 @@ export default function OnboardingPage() {
           offeringsAndGoals,
           websiteOrDemoUrl,
           referenceUrl,
+          selectedBenchmarkId: selectedBenchmark?.id,
         }),
       });
 
@@ -51,6 +54,12 @@ export default function OnboardingPage() {
 
       setInferredProfile(data.profile);
       setAdaptiveQuestions(data.questions || []);
+      if (data.suggestedBenchmarks) {
+        setSuggestedBenchmarks(data.suggestedBenchmarks);
+        if (!referenceUrl && data.suggestedBenchmarks.recommended) {
+          setSelectedBenchmark(data.suggestedBenchmarks.recommended);
+        }
+      }
 
       if (data.questions && data.questions.length > 0) {
         setStep('clarify');
@@ -78,7 +87,8 @@ export default function OnboardingPage() {
             businessCategory: businessCategory || inferredProfile?.businessCategory,
             offeringsAndGoals: `${offeringsAndGoals} ${Object.values(selectedAnswers).join('. ')}`,
             websiteOrDemoUrl,
-            referenceUrl,
+            referenceUrl: referenceUrl || selectedBenchmark?.url,
+            selectedBenchmarkId: selectedBenchmark?.id,
           },
         }),
       });
@@ -533,6 +543,100 @@ export default function OnboardingPage() {
                   </span>
                 ))}
               </div>
+            </div>
+
+            {/* Suggested Benchmark Reference Websites */}
+            <div style={{ marginBottom: '28px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
+                <h3 style={{ fontSize: '15px', fontWeight: 600, margin: 0 }}>
+                  Reference Website &amp; Design Blueprint
+                </h3>
+                {referenceUrl ? (
+                  <span style={{ fontSize: '12px', color: 'var(--studio-accent)', fontWeight: 600 }}>
+                    Custom Reference Provided: {referenceUrl}
+                  </span>
+                ) : (
+                  <span style={{ fontSize: '12px', color: 'var(--studio-muted)' }}>
+                    Select an inspirational benchmark to adapt layout &amp; design
+                  </span>
+                )}
+              </div>
+
+              {!referenceUrl && (
+                <div style={{ padding: '12px 14px', background: '#f5f0eb', borderRadius: '8px', marginBottom: '16px', fontSize: '13px', color: 'var(--studio-ink)', lineHeight: 1.5 }}>
+                  💡 <b>No reference link was provided.</b> We analyzed top benchmarks for <b>{inferredProfile.businessCategory}</b>.
+                  Select a reference below to apply its component placement, typography, and proven conversion architecture:
+                </div>
+              )}
+
+              {suggestedBenchmarks && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '14px' }}>
+                  {[suggestedBenchmarks.recommended, ...suggestedBenchmarks.alternatives.slice(0, 3)].map((bm: any) => {
+                    const isPicked = selectedBenchmark?.id === bm.id;
+                    const isRec = suggestedBenchmarks.recommended.id === bm.id;
+
+                    return (
+                      <div
+                        key={bm.id}
+                        onClick={() => {
+                          setSelectedBenchmark(bm);
+                          setInferredProfile((prev: any) => ({
+                            ...prev,
+                            brandTone: bm.aestheticTone,
+                          }));
+                        }}
+                        style={{
+                          padding: '18px',
+                          borderRadius: '10px',
+                          border: isPicked ? '2px solid var(--studio-accent)' : '1px solid var(--studio-border)',
+                          background: isPicked ? '#fcfbf9' : '#fff',
+                          cursor: 'pointer',
+                          position: 'relative',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'space-between',
+                          boxShadow: isPicked ? '0 4px 14px rgba(140, 89, 59, 0.12)' : 'none',
+                          transition: 'all 0.2s ease',
+                        }}
+                      >
+                        <div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <span style={{ fontWeight: 700, fontSize: '15px' }}>{bm.name}</span>
+                            {isRec && (
+                              <span style={{ background: '#f5f0eb', color: 'var(--studio-accent)', fontSize: '11px', fontWeight: 700, padding: '2px 8px', borderRadius: '999px' }}>
+                                Recommended
+                              </span>
+                            )}
+                          </div>
+                          <p style={{ fontSize: '13px', color: 'var(--studio-muted)', margin: '0 0 12px', lineHeight: 1.45 }}>
+                            {bm.tagline}
+                          </p>
+                          <div style={{ background: '#faf9f6', padding: '10px 12px', borderRadius: '6px', marginBottom: '12px', fontSize: '12px' }}>
+                            <div style={{ fontWeight: 600, color: 'var(--studio-accent)', marginBottom: '4px' }}>Why This Benchmark Works:</div>
+                            <ul style={{ margin: 0, paddingLeft: '16px', lineHeight: 1.6, color: '#444' }}>
+                              {bm.whyItWorks?.slice(0, 3).map((w: string, idx: number) => (
+                                <li key={idx}>{w}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', fontSize: '11px', color: 'var(--studio-muted)' }}>
+                            <span style={{ background: '#f0eee8', padding: '2px 8px', borderRadius: '4px' }}>Tone: {bm.aestheticTone}</span>
+                            <span style={{ background: '#f0eee8', padding: '2px 8px', borderRadius: '4px' }}>Font: {bm.fontPairing}</span>
+                            <span style={{ background: '#f0eee8', padding: '2px 8px', borderRadius: '4px' }}>Hero: {bm.keyDesignFeatures?.heroVariant}</span>
+                          </div>
+                        </div>
+
+                        <div style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid var(--studio-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span style={{ fontSize: '12px', fontWeight: 600, color: isPicked ? 'var(--studio-accent)' : 'var(--studio-muted)' }}>
+                            {isPicked ? '✓ Applied as Blueprint' : 'Click to Apply Blueprint'}
+                          </span>
+                          <span style={{ fontSize: '11px', color: 'var(--studio-muted)' }}>{bm.url.replace('https://', '')}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Design Direction Note */}

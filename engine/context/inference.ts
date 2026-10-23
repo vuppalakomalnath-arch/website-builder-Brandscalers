@@ -1,5 +1,6 @@
 import { BusinessProfile } from '@/lib/schemas/business-profile.schema';
 import { BUSINESS_TAXONOMY, CategoryGuidance } from './taxonomy';
+import { BENCHMARK_WEBSITES, BenchmarkWebsite } from './benchmarks';
 
 export interface RawBriefInput {
   businessName: string;
@@ -7,6 +8,7 @@ export interface RawBriefInput {
   offeringsAndGoals: string;
   websiteOrDemoUrl?: string;
   referenceUrl?: string;
+  selectedBenchmarkId?: string;
 }
 
 export function inferBusinessProfile(input: RawBriefInput): BusinessProfile {
@@ -235,13 +237,31 @@ export function inferBusinessProfile(input: RawBriefInput): BusinessProfile {
     selectedTone = 'warm-clinic';
   }
 
+  // Reference Benchmark Matching: If user selected a suggested benchmark or provided a reference URL
+  let matchedBenchmark: BenchmarkWebsite | null = null;
+  if (input.selectedBenchmarkId) {
+    matchedBenchmark = BENCHMARK_WEBSITES.find((b) => b.id === input.selectedBenchmarkId) || null;
+  }
+  if (!matchedBenchmark && input.referenceUrl) {
+    const ref = input.referenceUrl.toLowerCase();
+    matchedBenchmark =
+      BENCHMARK_WEBSITES.find((b) => ref.includes(b.id) || ref.includes(b.url.replace('https://', '').split('.')[0])) ||
+      null;
+  }
+
+  if (matchedBenchmark) {
+    selectedTone = matchedBenchmark.aestheticTone;
+  }
+
   const assumptions = [
     {
       id: 'assump-tone',
       field: 'brandTone',
       value: selectedTone,
-      confidence: 0.92,
-      evidence: `Derived from ${guidance.category} and stylistic brief cues`,
+      confidence: matchedBenchmark ? 0.99 : 0.92,
+      evidence: matchedBenchmark
+        ? `Adopted from chosen benchmark archetype: ${matchedBenchmark.name}`
+        : `Derived from ${guidance.category} and stylistic brief cues`,
       riskIfIncorrect: 'low' as const,
       requiresConfirmation: false,
     },
@@ -275,7 +295,9 @@ export function inferBusinessProfile(input: RawBriefInput): BusinessProfile {
       providedCategory: input.businessCategory,
       briefSummary: input.offeringsAndGoals,
       websiteOrDemoUrl: input.websiteOrDemoUrl || null,
-      referenceUrl: input.referenceUrl || null,
+      referenceUrl: input.referenceUrl || (matchedBenchmark ? matchedBenchmark.url : null),
+      benchmarkId: matchedBenchmark ? matchedBenchmark.id : null,
+      referenceBlueprint: matchedBenchmark || null,
     },
     assumptions,
     openQuestions: [],

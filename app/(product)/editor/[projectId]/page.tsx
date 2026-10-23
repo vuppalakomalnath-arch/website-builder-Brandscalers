@@ -51,7 +51,7 @@ export default async function VisualEditorPage({
       initialManifest={latestVersion?.manifest || null}
       initialDesignSystem={latestVersion?.designSystem || null}
       initialContentBlocks={(latestVersion?.contentBlocks as any[]) || []}
-      initialQualityReport={latestQuality?.reportData || null}
+      initialQualityReport={latestQuality ? (latestQuality as any) : null}
       initialCostTelemetry={{
         totalCostINR: latestRun?.estimatedCostINR || 0.02,
         withinBudget: (latestRun?.estimatedCostINR || 0) <= 8.0,

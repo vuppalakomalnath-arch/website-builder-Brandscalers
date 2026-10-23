@@ -78,13 +78,16 @@ export function composeWebsite(
   plan.pagePlans.forEach((pp, pageIdx) => {
     const componentInstances: ComponentInstance[] = [];
 
+    // Check if benchmark overrides exist
+    const blueprint = profile.confirmedFacts?.referenceBlueprint;
+
     // 1. Frame Header
     const headerPiece = piecesMap.get('p-frame-header');
     if (headerPiece) {
       componentInstances.push({
         instanceId: `inst-header-${pp.slug}`,
         pieceId: 'p-frame-header',
-        variantName: 'classic',
+        variantName: blueprint?.variantOverrides?.['p-frame-header'] || 'classic',
         category: 'frame',
         props: {
           brandName: profile.businessName,
@@ -101,7 +104,7 @@ export function composeWebsite(
     // 2. Page Sections with REAL, Truthful Copy
     pp.sections.forEach((sec, secIdx) => {
       const piece = piecesMap.get(sec.pieceId);
-      const chosenVariant = sec.preferredVariant || piece?.variants[0]?.name || 'default';
+      const chosenVariant = sec.preferredVariant || blueprint?.variantOverrides?.[sec.pieceId] || piece?.variants?.[0]?.name || 'default';
 
       let sectionProps: Record<string, any> = {
         eyebrow: profile.businessCategory,
@@ -278,7 +281,7 @@ export function composeWebsite(
       componentInstances.push({
         instanceId: `inst-footer-${pp.slug}`,
         pieceId: 'p-frame-footer',
-        variantName: 'columns',
+        variantName: blueprint?.variantOverrides?.['p-frame-footer'] || 'columns',
         category: 'frame',
         props: {
           brandName: profile.businessName,
